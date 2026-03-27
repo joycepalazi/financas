@@ -2,186 +2,632 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Gestão Financeira</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Finança Fácil - Sistema de Gestão Financeira</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #eef2f7;
       margin: 0;
-      padding: 20px;
+      padding: 24px 16px;
     }
 
     h1 {
       text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+      color: #1e2a3e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    h1:before {
+      content: "💰";
+      font-size: 2rem;
     }
 
     .container {
-      max-width: 800px;
-      margin: auto;
+      max-width: 1000px;
+      margin: 0 auto;
       background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 24px 20px;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s;
+    }
+
+    /* Formulário em grid responsivo */
+    .form-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: flex-end;
+    }
+
+    .input-field {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .input-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
     }
 
     input, select, button {
-      padding: 10px;
-      margin: 5px 0;
+      padding: 12px 14px;
+      font-size: 1rem;
+      border-radius: 16px;
+      border: 1px solid #cfdfe8;
+      background: white;
+      transition: all 0.2s ease;
       width: 100%;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #4c9aff;
+      box-shadow: 0 0 0 3px rgba(76, 154, 255, 0.2);
     }
 
     button {
-      background: #4CAF50;
+      background: #1f6e43;
       color: white;
       border: none;
       cursor: pointer;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      transition: 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
     button:hover {
-      background: #45a049;
+      background: #0f5a37;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
+    /* Cards resumo */
     .summary {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      margin: 20px 0;
+      gap: 16px;
+      margin: 30px 0 28px;
     }
 
     .card {
       flex: 1;
-      margin: 5px;
-      padding: 10px;
-      border-radius: 8px;
+      min-width: 130px;
+      padding: 16px 8px;
+      border-radius: 28px;
       color: white;
       text-align: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
     }
 
-    .income { background: #2ecc71; }
-    .expense { background: #e74c3c; }
-    .balance { background: #3498db; }
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+
+    .income { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .expense { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .balance { background: linear-gradient(135deg, #3498db, #2980b9); }
+
+    /* Área de filtros */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0 16px;
+      gap: 12px;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 40px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group label {
+      font-weight: 600;
+      color: #1e4663;
+    }
+
+    .filter-select {
+      width: auto;
+      padding: 8px 16px;
+      border-radius: 40px;
+      background: white;
+    }
+
+    .reset-filter {
+      background: #6c757d;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      width: auto;
+    }
+
+    .reset-filter:hover {
+      background: #495057;
+    }
+
+    /* Tabela estilizada */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 20px;
+      margin-top: 12px;
+    }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      font-size: 0.95rem;
     }
 
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+    th {
+      background: #e9f0f5;
+      padding: 14px 12px;
       text-align: left;
+      font-weight: 700;
+      color: #1e2f3f;
+    }
+
+    td {
+      padding: 12px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-align: center;
+      background: #e9ecef;
+      color: #2c3e50;
+    }
+
+    .type-income {
+      background: #d4f0e0;
+      color: #1e6f3f;
+    }
+
+    .type-expense {
+      background: #ffe2dd;
+      color: #bc2c1e;
     }
 
     .delete-btn {
-      background: red;
+      background: #e53e3e;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 6px 14px;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      transition: 0.2s;
+      width: auto;
+    }
+
+    .delete-btn:hover {
+      background: #c53030;
+      transform: scale(0.96);
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 32px;
+      color: #7f8c8d;
+      font-style: italic;
+    }
+
+    /* alerta customizado suave */
+    .toast-msg {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.75rem;
+      color: #5a6e7c;
+    }
+
+    @media (max-width: 640px) {
+      .card p {
+        font-size: 1.2rem;
+      }
+      .form-group {
+        flex-direction: column;
+      }
+      button {
+        width: 100%;
+      }
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-select, .reset-filter {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Sistema de Gestão Financeira</h1>
 
-  <div class="container">
-    <input type="text" id="desc" placeholder="Descrição">
-    <input type="number" id="amount" placeholder="Valor">
-    <select id="type">
-      <option value="income">Receita</option>
-      <option value="expense">Despesa</option>
-    </select>
-    <button onclick="addTransaction()">Adicionar</button>
+<h1>Gestão Financeira</h1>
 
-    <div class="summary">
-      <div class="card income">
-        <h3>Receitas</h3>
-        <p id="totalIncome">R$ 0</p>
-      </div>
-      <div class="card expense">
-        <h3>Despesas</h3>
-        <p id="totalExpense">R$ 0</p>
-      </div>
-      <div class="card balance">
-        <h3>Saldo</h3>
-        <p id="balance">R$ 0</p>
-      </div>
+<div class="container">
+  <!-- Formulário aprimorado -->
+  <div class="form-group">
+    <div class="input-field">
+      <label>📝 Descrição</label>
+      <input type="text" id="desc" placeholder="Ex: Salário, Aluguel, Supermercado" autocomplete="off">
     </div>
+    <div class="input-field">
+      <label>💰 Valor (R$)</label>
+      <input type="number" id="amount" placeholder="0,00" step="0.01">
+    </div>
+    <div class="input-field">
+      <label>📌 Tipo</label>
+      <select id="type">
+        <option value="income">➕ Receita</option>
+        <option value="expense">➖ Despesa</option>
+      </select>
+    </div>
+    <div class="input-field">
+      <label> </label>
+      <button id="addBtn">Adicionar Transação</button>
+    </div>
+  </div>
 
+  <!-- Cards resumo dinâmicos -->
+  <div class="summary">
+    <div class="card income">
+      <h3>🟢 Receitas</h3>
+      <p id="totalIncome">R$ 0,00</p>
+    </div>
+    <div class="card expense">
+      <h3>🔴 Despesas</h3>
+      <p id="totalExpense">R$ 0,00</p>
+    </div>
+    <div class="card balance">
+      <h3>🔵 Saldo</h3>
+      <p id="balance">R$ 0,00</p>
+    </div>
+  </div>
+
+  <!-- Filtro por tipo -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>🔍 Filtrar:</label>
+      <select id="filterType" class="filter-select">
+        <option value="all">📋 Todas as transações</option>
+        <option value="income">💵 Apenas Receitas</option>
+        <option value="expense">💸 Apenas Despesas</option>
+      </select>
+    </div>
+    <button id="resetFilterBtn" class="reset-filter">⟳ Limpar Filtro</button>
+  </div>
+
+  <!-- Tabela com transações -->
+  <div class="table-wrapper">
     <table>
       <thead>
         <tr>
           <th>Descrição</th>
           <th>Valor</th>
           <th>Tipo</th>
-          <th>Ação</th>
+          <th style="width: 90px">Ação</th>
         </tr>
       </thead>
       <tbody id="list"></tbody>
     </table>
   </div>
+  <footer>💾 Os dados são salvos automaticamente no seu navegador</footer>
+</div>
 
-  <script>
-    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+<div id="toastMsg" class="toast-msg"></div>
 
-    function save() {
-      localStorage.setItem('transactions', JSON.stringify(transactions));
-    }
+<script>
+  // ---------- Estado global ----------
+  let transactions = [];        // array de objetos { id, desc, amount, type }
+  let currentFilter = "all";   // all, income, expense
 
-    function addTransaction() {
-      const desc = document.getElementById('desc').value;
-      const amount = parseFloat(document.getElementById('amount').value);
-      const type = document.getElementById('type').value;
+  // Elementos DOM
+  const descInput = document.getElementById('desc');
+  const amountInput = document.getElementById('amount');
+  const typeSelect = document.getElementById('type');
+  const addBtn = document.getElementById('addBtn');
+  const filterSelect = document.getElementById('filterType');
+  const resetFilterBtn = document.getElementById('resetFilterBtn');
+  const tbody = document.getElementById('list');
+  const totalIncomeSpan = document.getElementById('totalIncome');
+  const totalExpenseSpan = document.getElementById('totalExpense');
+  const balanceSpan = document.getElementById('balance');
 
-      if (!desc || isNaN(amount)) {
-        alert('Preencha os campos corretamente');
-        return;
+  // Função auxiliar para notificações suaves
+  function showMessage(msg, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = msg;
+    toast.style.backgroundColor = isError ? '#c53030' : '#1f6e43';
+    toast.style.opacity = '1';
+    setTimeout(() => {
+      toast.style.opacity = '0';
+    }, 2200);
+  }
+
+  // Carregar dados do localStorage com validação
+  function loadFromStorage() {
+    const stored = localStorage.getItem('finance_manager');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          // Garantir que cada item possua os campos necessários e ID único
+          transactions = parsed.filter(item => item && typeof item === 'object' && 'desc' in item && 'amount' in item && 'type' in item)
+            .map((item, idx) => ({
+              id: item.id || Date.now() + idx + Math.random(),
+              desc: String(item.desc).trim(),
+              amount: Number(item.amount),
+              type: item.type === 'income' ? 'income' : 'expense'
+            }));
+          // Remover entradas com valores NaN ou desc vazia
+          transactions = transactions.filter(t => !isNaN(t.amount) && t.desc.length > 0);
+        } else {
+          transactions = [];
+        }
+      } catch(e) {
+        transactions = [];
       }
+    }
+    if (!transactions.length) {
+      // Dados de exemplo para demonstração (opcional)
+      transactions = [
+        { id: Date.now() + 1, desc: "Freelance", amount: 1250.00, type: "income" },
+        { id: Date.now() + 2, desc: "Supermercado", amount: 430.50, type: "expense" },
+        { id: Date.now() + 3, desc: "Netflix", amount: 39.90, type: "expense" },
+        { id: Date.now() + 4, desc: "Salário", amount: 3200.00, type: "income" }
+      ];
+      saveToStorage();
+    }
+  }
 
-      transactions.push({ desc, amount, type });
-      save();
-      render();
+  // Salvar no localStorage
+  function saveToStorage() {
+    localStorage.setItem('finance_manager', JSON.stringify(transactions));
+  }
 
-      document.getElementById('desc').value = '';
-      document.getElementById('amount').value = '';
+  // Adicionar transação
+  function addTransaction() {
+    let desc = descInput.value.trim();
+    const rawAmount = amountInput.value.trim();
+    const type = typeSelect.value;
+
+    // Validações robustas
+    if (desc === "") {
+      showMessage("❌ Por favor, informe a descrição.", true);
+      return;
+    }
+    if (rawAmount === "") {
+      showMessage("⚠️ Informe o valor da transação.", true);
+      return;
+    }
+    const amount = parseFloat(rawAmount);
+    if (isNaN(amount) || amount <= 0) {
+      showMessage("💰 Valor deve ser um número positivo maior que zero.", true);
+      return;
     }
 
-    function removeTransaction(index) {
+    // Criar nova transação com ID único
+    const newTransaction = {
+      id: Date.now() + Math.random() * 10000,
+      desc: desc,
+      amount: amount,
+      type: type
+    };
+    transactions.push(newTransaction);
+    saveToStorage();
+    renderListAndSummary();
+
+    // Limpar campos
+    descInput.value = "";
+    amountInput.value = "";
+    descInput.focus();
+    showMessage(`✅ ${type === 'income' ? 'Receita' : 'Despesa'} adicionada com sucesso!`);
+  }
+
+  // Remover transação por id
+  function removeTransactionById(id) {
+    const index = transactions.findIndex(t => t.id === id);
+    if (index !== -1) {
+      const removed = transactions[index];
       transactions.splice(index, 1);
-      save();
-      render();
+      saveToStorage();
+      renderListAndSummary();
+      showMessage(`🗑️ "${removed.desc}" removido(a).`);
+    }
+  }
+
+  // Obter transações filtradas com base no filtro atual
+  function getFilteredTransactions() {
+    if (currentFilter === "income") {
+      return transactions.filter(t => t.type === "income");
+    } else if (currentFilter === "expense") {
+      return transactions.filter(t => t.type === "expense");
+    }
+    return [...transactions];
+  }
+
+  // Renderizar tabela e totais (evita duplicação)
+  function renderListAndSummary() {
+    // Calcular totais a partir de todas as transações (sempre baseado no array completo)
+    let totalIncomeAll = 0;
+    let totalExpenseAll = 0;
+    for (const t of transactions) {
+      if (t.type === 'income') totalIncomeAll += t.amount;
+      else totalExpenseAll += t.amount;
+    }
+    const balanceAll = totalIncomeAll - totalExpenseAll;
+
+    totalIncomeSpan.innerText = `R$ ${totalIncomeAll.toFixed(2)}`;
+    totalExpenseSpan.innerText = `R$ ${totalExpenseAll.toFixed(2)}`;
+    balanceSpan.innerText = `R$ ${balanceAll.toFixed(2)}`;
+
+    // Aplicar cores do saldo (estilo adicional)
+    const balanceCard = document.querySelector('.card.balance p');
+    if (balanceAll >= 0) {
+      balanceSpan.style.color = "#f9f9f9";
+    } else {
+      balanceSpan.style.color = "#ffdddd";
     }
 
-    function render() {
-      const list = document.getElementById('list');
-      list.innerHTML = '';
+    // Renderizar tabela com filtro ativo
+    const filtered = getFilteredTransactions();
+    tbody.innerHTML = "";
 
-      let income = 0;
-      let expense = 0;
+    if (filtered.length === 0) {
+      const emptyRow = document.createElement('tr');
+      emptyRow.innerHTML = `<td colspan="4" class="empty-message">📭 Nenhuma transação encontrada para este filtro. Adicione novos registros.</td>`;
+      tbody.appendChild(emptyRow);
+      return;
+    }
 
-      transactions.forEach((t, index) => {
-        if (t.type === 'income') income += t.amount;
-        else expense += t.amount;
+    // Ordenar por data decrescente (mais recentes primeiro) baseado no ID timestamp
+    const sorted = [...filtered].sort((a, b) => b.id - a.id);
 
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${t.desc}</td>
-          <td>R$ ${t.amount.toFixed(2)}</td>
-          <td>${t.type === 'income' ? 'Receita' : 'Despesa'}</td>
-          <td><button class="delete-btn" onclick="removeTransaction(${index})">X</button></td>
-        `;
-        list.appendChild(row);
+    for (const trans of sorted) {
+      const row = document.createElement('tr');
+      const valorFormatado = `R$ ${trans.amount.toFixed(2)}`;
+      const tipoTexto = trans.type === 'income' ? 'Receita' : 'Despesa';
+      const badgeClass = trans.type === 'income' ? 'type-income' : 'type-expense';
+
+      row.innerHTML = `
+        <td style="font-weight: 500;">${escapeHtml(trans.desc)}</td>
+        <td style="color: ${trans.type === 'income' ? '#1e6f3f' : '#bc2c1e'}; font-weight: 600;">${valorFormatado}</td>
+        <td><span class="type-badge ${badgeClass}">${tipoTexto}</span></td>
+        <td><button class="delete-btn" data-id="${trans.id}">✖ Remover</button></td>
+      `;
+      tbody.appendChild(row);
+    }
+
+    // Adicionar eventos de deleção para cada botão (melhor performance que onclick inline)
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = Number(btn.getAttribute('data-id'));
+        if (!isNaN(id)) {
+          removeTransactionById(id);
+        }
       });
+    });
+  }
 
-      document.getElementById('totalIncome').innerText = 'R$ ' + income.toFixed(2);
-      document.getElementById('totalExpense').innerText = 'R$ ' + expense.toFixed(2);
-      document.getElementById('balance').innerText = 'R$ ' + (income - expense).toFixed(2);
+  // Função simples para evitar XSS
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  // Atualizar filtro e re-renderizar
+  function setFilter(filterValue) {
+    if (filterValue === 'all' || filterValue === 'income' || filterValue === 'expense') {
+      currentFilter = filterValue;
+      filterSelect.value = filterValue;
+      renderListAndSummary();
+      const filterMsg = filterValue === 'all' ? 'mostrando todas' : (filterValue === 'income' ? 'mostrando apenas receitas' : 'mostrando apenas despesas');
+      showMessage(`🔎 Filtro: ${filterMsg}`);
     }
+  }
 
-    render();
-  </script>
+  function resetFilter() {
+    setFilter('all');
+  }
+
+  // Eventos e inicialização
+  function init() {
+    loadFromStorage();
+    renderListAndSummary();
+
+    // Botão adicionar
+    addBtn.addEventListener('click', addTransaction);
+
+    // Permitir Enter nos campos
+    const handleEnter = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addTransaction();
+      }
+    };
+    descInput.addEventListener('keypress', handleEnter);
+    amountInput.addEventListener('keypress', handleEnter);
+
+    // Filtro via select
+    filterSelect.addEventListener('change', (e) => {
+      setFilter(e.target.value);
+    });
+
+    resetFilterBtn.addEventListener('click', resetFilter);
+  }
+
+  // Iniciar aplicação
+  init();
+</script>
 </body>
 </html>
